@@ -6,6 +6,9 @@ on:
       - main
       - develop
   create:
+    branches:
+      - main
+      - develop
 jobs:
   check-branch-name:
     runs-on: ubuntu-latest
