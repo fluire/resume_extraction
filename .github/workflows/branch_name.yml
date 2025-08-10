@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-
+  creation:
 jobs:
   check-branch-name:
     runs-on: ubuntu-latest
