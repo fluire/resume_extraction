@@ -1,34 +1,20 @@
-name: Enforce Branch Name for PRs
+name: 'Check Branch'
 
 on:
   pull_request:
-    branches:
-      - main
-      - develop
-  create:
-    branches:
-      - main
-      - develop
+
 jobs:
-  check-branch-name:
+  check_branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug environment
+      - name: Check merge to main
+        if: github.base_ref == 'main' && github.head_ref != 'dev'
         run: |
-          echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
-          echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
-          echo "GITHUB_REF: $GITHUB_REF"
-          
-      - name: Check branch name
-        shell: bash
+          echo "ERROR: You can only merge to main from dev."
+          exit 1
+      
+      - name: Check merge to dev
+        if: github.base_ref == 'dev' && !startsWith(github.head_ref, 'feature/') && !startsWith(github.head_ref, 'bug/')
         run: |
-          branch_name="${GITHUB_HEAD_REF}"
-          echo "Checking branch name: $branch_name"
-          
-          if [[ ! "$branch_name" =~ ^(feature|bug)/[a-zA-Z0-9._-]+$ ]]; then
-            echo "❌ Branch name '$branch_name' is invalid."
-            echo "Allowed patterns: feature/* or bug/*"
-            exit 1
-          else
-            echo "✅ Branch name '$branch_name' is valid."
-          fi
+          echo "ERROR: You can only merge to dev from feature/* or bug/* branches."
+          exit 1
