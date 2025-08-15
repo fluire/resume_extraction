@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     postgres_uri: str = Field(..., env="POSTGRES_URI")
     postgres_username: str = Field(..., env="POSTGRES_USERNAME")
     postgres_password: str = Field(..., env="POSTGRES_PASSWORD")
+    llm_url_ollama: Optional[str] = Field(..., env="OLLAMA_URI")
 
     class Config:
         env_file = ".env"
@@ -34,6 +35,7 @@ def load_ini_config(ini_path: Optional[str] = None):
         "postgres_uri": config.get("postgres", "uri"),
         "postgres_username": config.get("postgres", "username"),
         "postgres_password": config.get("postgres", "password"),
+        "llm_url_ollama":config.get("ollama", "llm_url_ollama")
     }
 
 # Load from .env or environment variables first, fallback to config.ini
